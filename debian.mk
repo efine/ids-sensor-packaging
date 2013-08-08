@@ -62,10 +62,13 @@ prepackage: $(SUBPKGS:%=%_check_vars) pkgclean
 	$(PGM_GIT) clone . $(PKGDIR)
 
 sources: $(SUBPKGS:%=%_source)
+ 
+clean:
+	@for pkg in $(SUBPKGS); do $(MAKE) -C $$pkg; debclean; done
 
-pkgclean:
+pkgclean: clean
 	@rm -rf $(DISTDIR)
-
+ 
 distclean: pkgclean
 	@rm -rf downloads
 
@@ -168,12 +171,12 @@ define build_debian
 		"$(GIT_LOG)"
 	cd $(2)/$(1) && \
 	$(PGM_DEBUILD) \
-		$(BUILD_OPTS) \
 		--no-lintian \
 		-e REVISION="$$$$pkg_ver" \
 		-e RELEASE="$(3)" \
 		-e VERSIONSTRING="$(call version_string,$$$$pkg,$$$$pkg_ver,$(DATE),$(OSNAME),$(ARCH))" \
 		-tc \
+		$(BUILD_OPTS) \
 		$(SIGN_OPT)
 endef
 
