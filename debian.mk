@@ -7,6 +7,10 @@ include config.mk
 #
 
 RELEASE ?= stable
+
+# Default to binary build, can override with -S or whatever
+BUILD_OPTS ?= -b
+
 PACKAGE := ids-sensor-package
 DISTDIR := $(PWD)/distdir
 DL_DIR := $(PWD)/downloads
@@ -163,11 +167,13 @@ define build_debian
 		-b -v "$$$$pkg_ver.$(GIT_LAST_COMMIT_UTC)~$(GIT_HASH)+$(CODENAME)" \
 		"$(GIT_LOG)"
 	cd $(2)/$(1) && \
-	$(PGM_DEBUILD) --no-lintian \
+	$(PGM_DEBUILD) \
+		$(BUILD_OPTS) \
+		--no-lintian \
 		-e REVISION="$$$$pkg_ver" \
 		-e RELEASE="$(3)" \
 		-e VERSIONSTRING="$(call version_string,$$$$pkg,$$$$pkg_ver,$(DATE),$(OSNAME),$(ARCH))" \
-		-b -tc \
+		-tc \
 		$(SIGN_OPT)
 endef
 
