@@ -51,7 +51,7 @@ ifneq ("$(HTTP_PROXY)","")
 	CURL_PROXY := -x $(HTTP_PROXY)
 endif
 
-SUBPKGS = suricata pf_ring bro
+SUBPKGS = pf_ring bro suricata
 
 package: prepackage sources $(SUBPKGS:%=%_debian)
 
@@ -63,10 +63,7 @@ prepackage: $(SUBPKGS:%=%_check_vars) pkgclean
 
 sources: $(SUBPKGS:%=%_source)
  
-clean:
-	@for pkg in $(SUBPKGS); do $(MAKE) -C $$pkg; debclean; done
-
-pkgclean: clean
+pkgclean:
 	@rm -rf $(DISTDIR)
  
 distclean: pkgclean
