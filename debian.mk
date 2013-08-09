@@ -161,6 +161,8 @@ define build_debian
 	cd $(2)/$(1) && \
 	export pkg_ver=$$$$($$(call get_pkg_version)) && \
 	export pkg=$$$$($$(call get_pkg)) && \
+	export dl_tarball=$$(call make_dl_tarball,$(1)) && \
+	ln -s -f $$$$dl_tarball ../$$$${pkg}_$$$${pkg_ver}.orig.tar.gz && \
 	$(PGM_DCH) --noquery \
 		--force-distribution \
 		--distribution $(3) \
